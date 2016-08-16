@@ -1,0 +1,38 @@
+# Project: XmlParse
+# Makefile created by Dev-C++ 4.9.9.2
+
+# This Makefile is written for syntax check!
+# Regenerate it if you want to use this Makefile to build.
+
+CPP  = g++.exe
+CC   = gcc.exe
+WINDRES = windres.exe
+RES  = XmlParse_private.res
+OBJ  = ParseTester.o XmlParser.o $(RES)
+LINKOBJ  = ParseTester.o XmlParser.o $(RES)
+LIBS =  -L"lib"  -march=pentium4 -msse2 
+INCS =  -I"include"  -I"D:/MyHOME/Program Files/Borland/CBuilder6/Include"  -I"D:/MyHOME/Program Files/Borland/CBuilder6/Include/stl"  -I"D:/MyHOME/Program Files/Borland/CBuilder6/Include/Stlport" 
+CXXINCS =  -I"lib/gcc/mingw32/3.4.2/include"  -I"include/c++/3.4.2/backward"  -I"include/c++/3.4.2/mingw32"  -I"include/c++/3.4.2"  -I"include"  -I"D:/MyHOME/Program Files/Borland/CBuilder6/Include"  -I"D:/MyHOME/Program Files/Borland/CBuilder6/Include/stl"  -I"D:/MyHOME/Program Files/Borland/CBuilder6/Include/Stlport" 
+BIN  = XmlParse.exe
+CXXFLAGS = $(CXXINCS)   -march=pentium4 -msse2
+CFLAGS = $(INCS)   -march=pentium4 -msse2
+RM = rm -f
+
+.PHONY: all all-before all-after clean clean-custom $(OBJ) $(BIN)
+
+all: all-before XmlParse.exe all-after
+
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+
+ParseTester.o:ParseTester.cpp
+	$(CPP) -S ParseTester.cpp -o nul $(CXXFLAGS)
+
+XmlParser.o:XmlParser.cpp
+	$(CPP) -S XmlParser.cpp -o nul $(CXXFLAGS)
+
+XmlParse_private.res:
+	$(WINDRES) -i XmlParse_private.rc --input-format=rc -o nul -O coff 
