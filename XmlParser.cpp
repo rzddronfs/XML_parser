@@ -3,9 +3,9 @@
 //---------------------------------------------------------------------------
 #include "XmlParser.h"
 #include <memory>
-#include <cstdlib>
-#pragma hdrstop
 #include <locale>
+#include <codecvt>
+#pragma hdrstop
 
 
 using namespace xml;
@@ -960,6 +960,7 @@ std::ostream & operator <<( std::ostream & rfDest, xml::CDocTree & rfSrc )
 {
   typedef xml::CTrunkNode::ATTR_LIST ATTR_LIST;
   typedef xml::CTrunkNode::NODE_LIST NODE_LIST;
+  typedef std::wstring_convert< std::codecvt_utf8< wchar_t > > WcsUtility;
   using namespace std;
 
   ATTR_LIST AttrList;
@@ -972,11 +973,8 @@ std::ostream & operator <<( std::ostream & rfDest, xml::CDocTree & rfSrc )
 
   // Name output stack frame
   {
-    size_t n = pXmlName->String.length();
-    CStrBuffer StrBuffer( n + 1 );
-
-    std::wcstombs( StrBuffer.szCStr, pXmlName->String.c_str(), n + 1 );
-    rfDest << "\n\n" << "Node Name : \t" << StrBuffer.szCStr << endl;
+    const std::string nodeName{ WcsUtility().to_bytes( pXmlName->String ) };
+    rfDest << "\n\n" << "Node Name : \t" << nodeName.c_str() << endl;
   }
 
   while( AttrList.First < AttrList.Last )
@@ -986,21 +984,14 @@ std::ostream & operator <<( std::ostream & rfDest, xml::CDocTree & rfSrc )
 
     // Attribute name output
     {
-
-      size_t n = pAttribute->cpName->length();
-      CStrBuffer StrBuffer( n + 1 );
-
-      std::wcstombs( StrBuffer.szCStr, pAttribute->cpName->c_str(), n + 1 );
-      rfDest << "\t" << "Name : \t" << StrBuffer.szCStr << endl;
+      const std::string attributeName{ WcsUtility().to_bytes( *pAttribute->cpName ) };
+      rfDest << "\t" << "Name : \t" << attributeName.c_str() << endl;
     }
 
     // Attribute value output
     {
-      size_t n = pAttribute->cpValue->length();
-      CStrBuffer StrBuffer( n + 1 );
-
-      std::wcstombs( StrBuffer.szCStr, pAttribute->cpValue->c_str(), n + 1 );
-      rfDest << "\t" << "Value : \t" << StrBuffer.szCStr << endl;
+      const std::string attributeValue{ WcsUtility().to_bytes( *pAttribute->cpValue ) };
+      rfDest << "\t" << "Value : \t" << attributeValue.c_str() << endl;
     }
     
     ++AttrList.First;
@@ -1014,11 +1005,8 @@ std::ostream & operator <<( std::ostream & rfDest, xml::CDocTree & rfSrc )
 
     *pThisNode >> pNodeContent;
 
-    size_t n = pNodeContent->String.length();
-    CStrBuffer StrBuffer( n + 1 );
-
-    std::wcstombs( StrBuffer.szCStr, pNodeContent->String.c_str(), n + 1 );
-    rfDest << "\t" << "Node Content : \t" << StrBuffer.szCStr << endl;
+    const std::string nodeContent{ WcsUtility().to_bytes( pNodeContent->String ) };
+    rfDest << "\t" << "Node Content : \t" << nodeContent.c_str() << endl;
   }
 
   while( LevelList.First < LevelList.Last )
