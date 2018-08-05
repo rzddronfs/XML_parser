@@ -82,77 +82,77 @@ namespace xml {
 //  String:
 //    AnyChExceptQuot
 //
-	
-	///////////////////////////////////////////////////////////////////////////
-	
-	struct CSubstSequence {
-		static CSubstSequence * TryMake( std::wstring * pSrc )
-			throw( std::bad_alloc );
+  
+  ///////////////////////////////////////////////////////////////////////////
+  
+  struct CSubstSequence {
+    static CSubstSequence * TryMake( std::wstring * pSrc )
+      throw( std::bad_alloc );
 
-		const CSubstSequence & operator >>( const std::wstring * & rfpContent ) const
-			throw();				
+    const CSubstSequence & operator >>( const std::wstring * & rfpContent ) const
+      throw();        
 
-		const CSubstSequence & operator >>( size_t & rfnSrcChar ) const
-			throw();
+    const CSubstSequence & operator >>( size_t & rfnSrcChar ) const
+      throw();
 
-		const CSubstSequence & operator >>( std::wstring::const_iterator & rfSrcEntry ) const
-			throw();
+    const CSubstSequence & operator >>( std::wstring::const_iterator & rfSrcEntry ) const
+      throw();
 
-	private:
-		CSubstSequence() {}
+  private:
+    CSubstSequence() {}
 
-		std::wstring m_Content;
-		size_t m_nSrcChar;
-		std::wstring::const_iterator m_SrcEntryItor;		
-	};
-	
-	///////////////////////////////////////////////////////////////////////////
+    std::wstring m_Content;
+    size_t m_nSrcChar;
+    std::wstring::const_iterator m_SrcEntryItor;    
+  };
+  
+  ///////////////////////////////////////////////////////////////////////////
 
-	struct CServiceTag {
-		static CServiceTag * TryMake( std::wstring * pSrc )
-			throw( std::bad_alloc );
+  struct CServiceTag {
+    static CServiceTag * TryMake( std::wstring * pSrc )
+      throw( std::bad_alloc );
 
-		const CServiceTag & operator >>( const std::wstring * & rfpContent ) const
-			throw();		
+    const CServiceTag & operator >>( const std::wstring * & rfpContent ) const
+      throw();    
 
-		const CServiceTag & operator >>( size_t & rfnSrcChar ) const
-			throw();
+    const CServiceTag & operator >>( size_t & rfnSrcChar ) const
+      throw();
 
-		const CServiceTag & operator >>( std::wstring::const_iterator & rfSrcEntry ) const
-			throw();
-			
-		private:
-			CServiceTag() {}
+    const CServiceTag & operator >>( std::wstring::const_iterator & rfSrcEntry ) const
+      throw();
+      
+    private:
+      CServiceTag() {}
 
-			size_t m_nRead;
-			std::wstring::const_iterator m_SrcEntryItor;
-			std::wstring m_ContentStr;
-	};
+      size_t m_nRead;
+      std::wstring::const_iterator m_SrcEntryItor;
+      std::wstring m_ContentStr;
+  };
 
-	///////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////
 
   struct CXmlComment {
     static CXmlComment * TryMake( std::wstring * pSrc )
       throw( std::bad_alloc );
 
-		const CXmlComment & operator >>( const std::wstring * & rfpContent ) const
-			throw();		
+    const CXmlComment & operator >>( const std::wstring * & rfpContent ) const
+      throw();    
 
     const CXmlComment & operator >>( size_t & rfnCommentChar ) const
       throw();
 
-		const CXmlComment & operator >>( std::wstring::const_iterator & rfSrcEntry ) const
-			throw();
+    const CXmlComment & operator >>( std::wstring::const_iterator & rfSrcEntry ) const
+      throw();
 
-		private:
-			CXmlComment() {}
+    private:
+      CXmlComment() {}
 
-			size_t m_nRead;
-			std::wstring::const_iterator m_SrcEntryItor;
-			std::wstring m_ContentStr;
+      size_t m_nRead;
+      std::wstring::const_iterator m_SrcEntryItor;
+      std::wstring m_ContentStr;
   };
 
-	///////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////
 
   struct CXmlName {
     static CXmlName * TryMake( std::wstring * pSrc ) throw( std::bad_alloc );
@@ -178,7 +178,7 @@ namespace xml {
     std::wstring m_Value;
   };
 
-	///////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////
 
   class CTrunkNode {
   public:
@@ -215,12 +215,12 @@ namespace xml {
     const CTrunkNode & operator >>( const CXmlName * & rfpName ) const
       throw();
 
-		// Optimizations support
-		const CTrunkNode & operator >>( size_t & rfnSrcChar ) const
+    // Optimizations support
+    const CTrunkNode & operator >>( size_t & rfnSrcChar ) const
       throw();
 
-		const CTrunkNode & operator >>( std::wstring::const_iterator & rfSrcEntry ) const
-			throw();
+    const CTrunkNode & operator >>( std::wstring::const_iterator & rfSrcEntry ) const
+      throw();
 
   protected:
     // Inconsistent init to consequent build up with TryMake (basement construction);
@@ -229,9 +229,9 @@ namespace xml {
     CXmlName m_NodeName;
     TXmlAttrSet m_AttrList;
 
-		// Optimizations support
-		size_t m_nSrcChar;
-		std::wstring::const_iterator m_SrcEntryItor;
+    // Optimizations support
+    size_t m_nSrcChar;
+    std::wstring::const_iterator m_SrcEntryItor;
 
   private:
     // Disable copy construction
@@ -240,7 +240,7 @@ namespace xml {
     TXmlLevel m_NodeList;
   };
 
-	///////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////
 
   class CTerminalNode : public CTrunkNode {
   public:
@@ -263,7 +263,7 @@ namespace xml {
     CTerminalNode( const CTerminalNode & rfSrc );
   };
 
-	///////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////
 
   class CDocTree {
   public:

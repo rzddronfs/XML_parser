@@ -25,39 +25,39 @@ const char * STR_UNINITILIZED_STREAM = "The given stream has not been correctly 
 const char * STR_INVALID_STREAM = "The given stream is not a valid XML document";
 
 // Optimization
-	// Max distance between adjacent xml constructs, such as tags.
-	const size_t N_SKIP_LIMIT = 64; 
+  // Max distance between adjacent xml constructs, such as tags.
+  const size_t N_SKIP_LIMIT = 64; 
 
 //---------------------------------------------------------------------------
 std::wstring * ReplaceSubstSeqs( std::wstring * pReadSeq )
 //---------------------------------------------------------------------------
-	throw( std::bad_alloc )
+  throw( std::bad_alloc )
 {
-	std::wstring * pResult = NULL;        
-	
-	while( CSubstSequence * pSubstSeq = CSubstSequence::TryMake( pReadSeq ) )
-	{
-		TAutoSubstSeq spSubstSeq( pSubstSeq );
-					
-		size_t n;
-		std::wstring::const_iterator SrcEntryItor;
-		const std::wstring * pSubstCont;
+  std::wstring * pResult = NULL;        
+  
+  while( CSubstSequence * pSubstSeq = CSubstSequence::TryMake( pReadSeq ) )
+  {
+    TAutoSubstSeq spSubstSeq( pSubstSeq );
+          
+    size_t n;
+    std::wstring::const_iterator SrcEntryItor;
+    const std::wstring * pSubstCont;
 
-		*spSubstSeq >> n >> SrcEntryItor >> pSubstCont;
+    *spSubstSeq >> n >> SrcEntryItor >> pSubstCont;
 
     TMutableEntryItor * pSrcEntryItor = ( TMutableEntryItor * )( & SrcEntryItor );
 
-		pReadSeq->replace(
-			*pSrcEntryItor,
+    pReadSeq->replace(
+      *pSrcEntryItor,
       *pSrcEntryItor + n,
       pSubstCont->begin(),
       pSubstCont->end()
     );
 
-		pResult = pReadSeq;
-	}
+    pResult = pReadSeq;
+  }
 
-	return pResult;
+  return pResult;
 }
 
 //---------------------------------------------------------------------------
@@ -99,50 +99,50 @@ CDocTree::CDocTree( std::wifstream * pXmlStream )
 
   TAutoString spReadSeq( new std::wstring );
   std::wstring * pReadSeq = spReadSeq.get();
-	
-	while( !pXmlStream->eof() && pXmlStream->good() )
-	{
-		wchar_t wcThisChar = pXmlStream->get();
+  
+  while( !pXmlStream->eof() && pXmlStream->good() )
+  {
+    wchar_t wcThisChar = pXmlStream->get();
     pReadSeq->append( 1 /* count */, wcThisChar );
-	}
+  }
 
-	size_t n = 0;
+  size_t n = 0;
 
-	while( CXmlComment * pXmlComment = CXmlComment::TryMake( pReadSeq ) )
-	{	
-		TAutoXmlComment spXmlComment( pXmlComment );
+  while( CXmlComment * pXmlComment = CXmlComment::TryMake( pReadSeq ) )
+  {  
+    TAutoXmlComment spXmlComment( pXmlComment );
     
-		size_t nSize;
+    size_t nSize;
     std::wstring::const_iterator SrcEntryItor;
-			
-		*spXmlComment >> nSize >> SrcEntryItor;
+      
+    *spXmlComment >> nSize >> SrcEntryItor;
 
     TMutableEntryItor * pSrcEntryItor = ( TMutableEntryItor * )( & SrcEntryItor );
 
     spReadSeq->erase(
       *pSrcEntryItor,
-			*pSrcEntryItor + nSize
+      *pSrcEntryItor + nSize
     );
 
-		++n;
-	}
+    ++n;
+  }
 
-	while( CServiceTag * pServiceTag = CServiceTag::TryMake( pReadSeq )  )
-	{
-		TAutoServiceTag spServiceTag( pServiceTag );
+  while( CServiceTag * pServiceTag = CServiceTag::TryMake( pReadSeq )  )
+  {
+    TAutoServiceTag spServiceTag( pServiceTag );
 
-		size_t nSize;
+    size_t nSize;
     std::wstring::const_iterator SrcEntryItor;
-			
-		*spServiceTag >> nSize >> SrcEntryItor;
+      
+    *spServiceTag >> nSize >> SrcEntryItor;
 
     TMutableEntryItor * pSrcEntryItor = (TMutableEntryItor *)( & SrcEntryItor );
 
     spReadSeq->erase(
       *pSrcEntryItor,
-			*pSrcEntryItor + nSize
+      *pSrcEntryItor + nSize
     ); 
-	}
+  }
  
   m_pRootNode = CTerminalNode::TryMake( pReadSeq );
     
@@ -167,55 +167,55 @@ const CXmlComment & CXmlComment::operator >>( size_t & rfnCommentChar ) const
 //---------------------------------------------------------------------------
 const CXmlComment & CXmlComment::operator >>( std::wstring::const_iterator & rfSrcEntry ) const
 //---------------------------------------------------------------------------
-	throw()
+  throw()
 {
-	rfSrcEntry = this->m_SrcEntryItor;
-	return *this;	
+  rfSrcEntry = this->m_SrcEntryItor;
+  return *this;  
 }
 
 //---------------------------------------------------------------------------
 const CServiceTag & CServiceTag::operator >>( size_t & rfnSrcChar ) const
 //---------------------------------------------------------------------------
-	throw()
+  throw()
 {
-	rfnSrcChar = this->m_nRead;
-	return *this;
+  rfnSrcChar = this->m_nRead;
+  return *this;
 }
 
 //---------------------------------------------------------------------------
 const CServiceTag & CServiceTag::operator >>( const std::wstring * & rfpContent ) const
 //---------------------------------------------------------------------------
-	throw()
+  throw()
 {
-	rfpContent = & this->m_ContentStr;
-	return *this;
+  rfpContent = & this->m_ContentStr;
+  return *this;
 }
 
 //---------------------------------------------------------------------------
 const CServiceTag & CServiceTag::operator >>( std::wstring::const_iterator & rfSrcEntry ) const
 //---------------------------------------------------------------------------
-	throw()
+  throw()
 {
-	rfSrcEntry = this->m_SrcEntryItor;
-	return *this;	
+  rfSrcEntry = this->m_SrcEntryItor;
+  return *this;  
 }
 
 //---------------------------------------------------------------------------
 const CXmlComment & CXmlComment::operator >>( const std::wstring * & rfpContent ) const
 //---------------------------------------------------------------------------
-	throw()
+  throw()
 {
-	rfpContent = & this->m_ContentStr;
-	return *this;
+  rfpContent = & this->m_ContentStr;
+  return *this;
 }
 
 //---------------------------------------------------------------------------
 const CTrunkNode & CTrunkNode::operator >>( std::wstring::const_iterator & rfSrcEntry ) const
 //---------------------------------------------------------------------------
-	throw()
+  throw()
 {
-	rfSrcEntry = this->m_SrcEntryItor;
-	return *this;	
+  rfSrcEntry = this->m_SrcEntryItor;
+  return *this;  
 }
 
 //---------------------------------------------------------------------------
@@ -242,7 +242,7 @@ CXmlComment * CXmlComment::TryMake( std::wstring * pSrc ) throw( std::bad_alloc 
     TAutoXmlComment spResult( new CXmlComment() );
     STATE eState = INITIAL;
     size_t nRead = 0;
-		size_t nPreParse = 0;
+    size_t nPreParse = 0;
 
     while( nRead < pSrc->size() && eState < FINAL )
     {
@@ -256,12 +256,12 @@ CXmlComment * CXmlComment::TryMake( std::wstring * pSrc ) throw( std::bad_alloc 
       if( eState == INITIAL && wcThisChar == L'<' )
       {
         nPreParse = nRead;
-				spResult->m_SrcEntryItor = pSrc->begin() + nRead;
-				eState = LAB;
+        spResult->m_SrcEntryItor = pSrc->begin() + nRead;
+        eState = LAB;
       }
       else if( eState == LAB && wcThisChar == L'!' && fSequental )
       {
-				eState = LES;
+        eState = LES;
       }
       else if( eState == LES && wcThisChar == L'-' && fSequental )
       {
@@ -311,10 +311,10 @@ CXmlComment * CXmlComment::TryMake( std::wstring * pSrc ) throw( std::bad_alloc 
         spReadSeq->clear();
       }
 
-			if( !fMatch && eState < LSH )
-			{
-				eState = INITIAL;
-			}
+      if( !fMatch && eState < LSH )
+      {
+        eState = INITIAL;
+      }
 
       if( eState == RAB )
       {
@@ -324,7 +324,7 @@ CXmlComment * CXmlComment::TryMake( std::wstring * pSrc ) throw( std::bad_alloc 
       ++nRead;
     }
 
-		spResult->m_nRead = nRead - nPreParse;
+    spResult->m_nRead = nRead - nPreParse;
 
     if( eState == FINAL )
     {
@@ -338,10 +338,10 @@ CXmlComment * CXmlComment::TryMake( std::wstring * pSrc ) throw( std::bad_alloc 
 //---------------------------------------------------------------------------
 const CTrunkNode & CTrunkNode::operator >>( size_t & rfnSrcChar ) const
 //---------------------------------------------------------------------------
-	throw()
+  throw()
 {
-	rfnSrcChar = this->m_nSrcChar;
-	return *this;
+  rfnSrcChar = this->m_nSrcChar;
+  return *this;
 }
 
 //---------------------------------------------------------------------------
@@ -355,7 +355,7 @@ CTrunkNode * CTrunkNode::TryMake( std::wstring * pSrc ) throw( std::bad_alloc )
       OTATT,
       OTRAB,
       SUBNODE,
-			CTSEARCH, // Close Tag Search
+      CTSEARCH, // Close Tag Search
       CTLAB, // Close Tag Left Angle Bracket
       CTSLASH,
       CTNAME,
@@ -368,7 +368,7 @@ CTrunkNode * CTrunkNode::TryMake( std::wstring * pSrc ) throw( std::bad_alloc )
   if( pSrc != NULL && pSrc->size() > 10 ) // <A><B/></A> => 11 chars => min valid format
   {
     size_t n = 0;
-		size_t nPreParse = 0;
+    size_t nPreParse = 0;
 
     TAutoString spReadSeq( new std::wstring );
     std::wstring * pReadSeq = spReadSeq.get();
@@ -382,136 +382,136 @@ CTrunkNode * CTrunkNode::TryMake( std::wstring * pSrc ) throw( std::bad_alloc )
       wchar_t wcThisChar = pSrc->at( n );
       pReadSeq->append( 1 /* count */, wcThisChar );
 
-			bool fSequental = pReadSeq->size() == 1;
-			bool fMatch = true;
-			bool fAttProcess = (eState == OTNAME || eState == OTATT);
-			bool fSubnodeProcess = (eState == OTRAB || eState == SUBNODE);
+      bool fSequental = pReadSeq->size() == 1;
+      bool fMatch = true;
+      bool fAttProcess = (eState == OTNAME || eState == OTATT);
+      bool fSubnodeProcess = (eState == OTRAB || eState == SUBNODE);
 
       if( eState == INITIAL && wcThisChar == L'<' )
       {       
         nPreParse = n;
-				spResult->m_SrcEntryItor = pSrc->begin() + n;
-				eState = OTLAB;
+        spResult->m_SrcEntryItor = pSrc->begin() + n;
+        eState = OTLAB;
       }
-			else if( eState == OTLAB )
+      else if( eState == OTLAB )
       {
         if( wcThisChar == L'/' )
-				{
-					n = pSrc->size();
-				}
-				else if( CXmlName * pName = CXmlName::TryMake( pReadSeq ) )
+        {
+          n = pSrc->size();
+        }
+        else if( CXmlName * pName = CXmlName::TryMake( pReadSeq ) )
         {
           TAutoXmlName spName( pName );
           spResult->m_NodeName.String.swap( pName->String );
           
           eState = OTNAME;
-					
-					// Parse wcThisChar again since XmlName detection requires 
-					// an extra character which is not in name detection set.
-					--n; 
+          
+          // Parse wcThisChar again since XmlName detection requires 
+          // an extra character which is not in name detection set.
+          --n; 
         }
-				else
-					fMatch = false;
+        else
+          fMatch = false;
       }
-			else if( fAttProcess )
+      else if( fAttProcess )
       {
-				if( wcThisChar == L'>' )
-				{      
-					eState = OTRAB;
-				}
-				else if( CAttribute * pAttribute = CAttribute::TryMake( pReadSeq ) )
+        if( wcThisChar == L'>' )
+        {      
+          eState = OTRAB;
+        }
+        else if( CAttribute * pAttribute = CAttribute::TryMake( pReadSeq ) )
         {
           TAutoAttribute spAttribute( pAttribute );
           spResult->m_AttrList.push_back( pAttribute );
           spAttribute.release();
-					        
+                  
           eState = OTATT;
         }
-				else
-					fMatch = false;
+        else
+          fMatch = false;
       }
-			else if( (eState == CTSEARCH || eState == SUBNODE) && wcThisChar == L'<' )
+      else if( (eState == CTSEARCH || eState == SUBNODE) && wcThisChar == L'<' )
       {       
         eState = CTLAB;
       }
-			else if( fSubnodeProcess )
+      else if( fSubnodeProcess )
       {
         // The optimization excludes extra lookups on detection of parse fragment
-					pReadSeq->clear();
-					pReadSeq->append( pSrc->begin() + n, pSrc->end() );
-				 
-				CTrunkNode * pSubnode = CTerminalNode::TryMake( pReadSeq );
+          pReadSeq->clear();
+          pReadSeq->append( pSrc->begin() + n, pSrc->end() );
+         
+        CTrunkNode * pSubnode = CTerminalNode::TryMake( pReadSeq );
         if( pSubnode == NULL )
         {
           pSubnode = CTrunkNode::TryMake( pReadSeq );
         }
 
-				// Optimization: disables successive calls of TryMake() methods above
-				// when there are whitespaces between last child node and closing tag.
-					eState = CTSEARCH;
+        // Optimization: disables successive calls of TryMake() methods above
+        // when there are whitespaces between last child node and closing tag.
+          eState = CTSEARCH;
 
         if( pSubnode != NULL )
         {
           TAutoTrunkNode spSubnode( pSubnode );
           spResult->m_NodeList.push_back( pSubnode );
 
-					// Optimization causes recalculation of the value of n.
-						std::wstring::const_iterator SrcEntryItor;
-						size_t nSubnodeSize;
-						*spSubnode >> SrcEntryItor >> nSubnodeSize;					
-						size_t nParsed = SrcEntryItor + nSubnodeSize - pReadSeq->begin();
-						n += nParsed - 1; 
+          // Optimization causes recalculation of the value of n.
+            std::wstring::const_iterator SrcEntryItor;
+            size_t nSubnodeSize;
+            *spSubnode >> SrcEntryItor >> nSubnodeSize;          
+            size_t nParsed = SrcEntryItor + nSubnodeSize - pReadSeq->begin();
+            n += nParsed - 1; 
 
           spSubnode.release();         
-          eState = SUBNODE;				
+          eState = SUBNODE;        
         }
-				// Disabled by optimization
-				//else
-					//fMatch = false;
+        // Disabled by optimization
+        //else
+          //fMatch = false;
       }
-			else if( eState == CTLAB && wcThisChar == L'/' && fSequental )
+      else if( eState == CTLAB && wcThisChar == L'/' && fSequental )
       {       
         eState = CTSLASH;
       }
-			else if( eState == CTSLASH )
+      else if( eState == CTSLASH )
       {
         if( CXmlName * pName = CXmlName::TryMake( pReadSeq ) )
         {
           TAutoXmlName spName( pName );         
           eState = CTNAME;
-					--n;
+          --n;
         }
-				else
-					fMatch = false;
+        else
+          fMatch = false;
       }
-			else if( eState == CTNAME && wcThisChar == L'>' )
+      else if( eState == CTNAME && wcThisChar == L'>' )
       {      
         eState = CTRAB;
       }
-			else
-				fMatch = false;
+      else
+        fMatch = false;
 
-			if( fMatch )
-			{
-				spReadSeq->clear();
-			}
+      if( fMatch )
+      {
+        spReadSeq->clear();
+      }
 
-			if( eState == CTRAB )
+      if( eState == CTRAB )
       {
         eState = FINAL;
       }
 
-			// Optimization
-				if( n == N_SKIP_LIMIT && eState < OTNAME )
-				{
-					n = pSrc->size();
-				}
+      // Optimization
+        if( n == N_SKIP_LIMIT && eState < OTNAME )
+        {
+          n = pSrc->size();
+        }
 
       ++n;
     }// while
 
-		// Optimization
-			spResult->m_nSrcChar = n - nPreParse;
+    // Optimization
+      spResult->m_nSrcChar = n - nPreParse;
 
     if( eState == FINAL )
     {
@@ -553,117 +553,117 @@ CTerminalNode * CTerminalNode::TryMake( std::wstring * pSrc ) throw( std::bad_al
 
     STATE eState = INITIAL;
 
-		size_t nPreParse = 0;
+    size_t nPreParse = 0;
     size_t n = 0;
     while( n < pSrc->size() && eState < FINAL )
     {
       wchar_t wcThisChar = pSrc->at( n );
       spReadSeq->append( 1 /* count */, wcThisChar );
 
-			bool fSequental = spReadSeq->size() == 1;
-			bool fAttrProcess = eState == OTNAME || eState == OTATTR;
+      bool fSequental = spReadSeq->size() == 1;
+      bool fAttrProcess = eState == OTNAME || eState == OTATTR;
 
-			bool fMatch = true;
+      bool fMatch = true;
 
       if( eState == INITIAL && wcThisChar == L'<' )
       {
         nPreParse = n;
-				spResult->m_SrcEntryItor = pSrc->begin() + n;
-				
+        spResult->m_SrcEntryItor = pSrc->begin() + n;
+        
         eState = OTLAB;
       }
-			else if( eState == OTLAB )
+      else if( eState == OTLAB )
       {
         if( wcThisChar == L'/' )
-				{
-					n = pSrc->size();
-				}
-				else if( CXmlName * pNodeName = CXmlName::TryMake( pReadSeq ) )
+        {
+          n = pSrc->size();
+        }
+        else if( CXmlName * pNodeName = CXmlName::TryMake( pReadSeq ) )
         {
           TAutoXmlName spNodeName( pNodeName );
           spResult->m_NodeName.String.swap( pNodeName->String );
           
           eState = OTNAME;
-					--n;
+          --n;
         }
-				else
-					fMatch = false;
+        else
+          fMatch = false;
       }
-			else if( fAttrProcess )
+      else if( fAttrProcess )
       {
-				if( wcThisChar == L'>' )
-				{       
-					eState = OTRAB;					
+        if( wcThisChar == L'>' )
+        {       
+          eState = OTRAB;          
 
-					if( pReadSeq->size() > 1 && *(pReadSeq->end() - 2) == L'/' )
-						eState = FINAL;						
-				}        
-				else if( CAttribute * pAttribute = CAttribute::TryMake( pReadSeq ) )
+          if( pReadSeq->size() > 1 && *(pReadSeq->end() - 2) == L'/' )
+            eState = FINAL;            
+        }        
+        else if( CAttribute * pAttribute = CAttribute::TryMake( pReadSeq ) )
         {
           TAutoAttribute spAttribute( pAttribute );
           spResult->m_AttrList.push_back( pAttribute );
           spAttribute.release();
           
           eState = OTATTR;
-					--n;
+          --n;
         }
-				else 
-					fMatch = false;
+        else 
+          fMatch = false;
       }
-			else if( eState == QCONTENT && wcThisChar == L'\"' )
+      else if( eState == QCONTENT && wcThisChar == L'\"' )
       {
         ReplaceSubstSeqs( pReadSeq );
-				
-				spResult->m_Content.String.append( *pReadSeq );       
+        
+        spResult->m_Content.String.append( *pReadSeq );       
         eState = BARECONT;
       }
-			else if( eState == OTRAB )
+      else if( eState == OTRAB )
       {        
-				spResult->m_Content.String.push_back( wcThisChar );
-				
-				if( wcThisChar == L'\"' )
-				{
-					eState = QCONTENT;
-				}        
-				if( wcThisChar == L'<' )
-				{
-					eState = CTLAB;
-					spResult->m_Content.String.pop_back();
-				}
-				else
-				{												
-					eState = BARECONT;
-				}
-	    }
-			else if( eState == BARECONT && wcThisChar == L'<' )
+        spResult->m_Content.String.push_back( wcThisChar );
+        
+        if( wcThisChar == L'\"' )
+        {
+          eState = QCONTENT;
+        }        
+        if( wcThisChar == L'<' )
+        {
+          eState = CTLAB;
+          spResult->m_Content.String.pop_back();
+        }
+        else
+        {                        
+          eState = BARECONT;
+        }
+      }
+      else if( eState == BARECONT && wcThisChar == L'<' )
       {
         pReadSeq->pop_back();
-				ReplaceSubstSeqs( pReadSeq );
+        ReplaceSubstSeqs( pReadSeq );
         spResult->m_Content.String.append( *pReadSeq );
        
         eState = CTLAB;
       }
-			else if( eState == CTLAB && wcThisChar == L'/' && fSequental )
+      else if( eState == CTLAB && wcThisChar == L'/' && fSequental )
       {        
         eState = CTSLASH;
       }
-			else if( eState == CTSLASH )
+      else if( eState == CTSLASH )
       {
         if( CXmlName * pNodeName = CXmlName::TryMake( pReadSeq ) )
         {
           TAutoXmlName spNodeName( pNodeName );          
           eState = CTNAME;
-					--n;
+          --n;
         }
-				else
-					fMatch = false;
+        else
+          fMatch = false;
       }
-			else if( eState == CTNAME && wcThisChar == L'>' )
+      else if( eState == CTNAME && wcThisChar == L'>' )
       {      
         eState = CTRAB;
       }
-			else
-				fMatch = false;
+      else
+        fMatch = false;
 
 
       if( eState == CTRAB )
@@ -671,22 +671,22 @@ CTerminalNode * CTerminalNode::TryMake( std::wstring * pSrc ) throw( std::bad_al
         eState = FINAL;
       }
 
-			if( fMatch )
-			{
-				pReadSeq->clear();
-			}
+      if( fMatch )
+      {
+        pReadSeq->clear();
+      }
 
-			// Optimization
-				if( n == N_SKIP_LIMIT && eState < OTNAME )
-				{
-					n = pSrc->size();
-				}
+      // Optimization
+        if( n == N_SKIP_LIMIT && eState < OTNAME )
+        {
+          n = pSrc->size();
+        }
 
       ++n;
     }// while
 
-		// Optimization
-			spResult->m_nSrcChar = n - nPreParse;
+    // Optimization
+      spResult->m_nSrcChar = n - nPreParse;
 
     if( eState == FINAL )
     {
@@ -730,36 +730,36 @@ CAttribute * CAttribute::TryMake( std::wstring * pSrc ) throw( std::bad_alloc )
       wchar_t wcThisChar = pSrc->at( n );
       pReadSeq->append( 1 /* count */, wcThisChar );
 
-			bool fMatch = true;
+      bool fMatch = true;
 
       if( eState == INITIAL )
       {        
-				// Since XmlName parser looks for the first not name character 
-				// the final state machine should continue updating of its state
-				// right on this iteration.
-				if( CXmlName * pAttName = CXmlName::TryMake( pReadSeq ) )
+        // Since XmlName parser looks for the first not name character 
+        // the final state machine should continue updating of its state
+        // right on this iteration.
+        if( CXmlName * pAttName = CXmlName::TryMake( pReadSeq ) )
         {
           TAutoXmlName spAttName( pAttName );
-					spResult->m_Name.String.swap( pAttName->String );
+          spResult->m_Name.String.swap( pAttName->String );
           eState = ATTNAME;
         }
-				else
-					fMatch = false;			
+        else
+          fMatch = false;      
       }
-			
-			if( eState == ATTNAME && wcThisChar == L'=' )
+      
+      if( eState == ATTNAME && wcThisChar == L'=' )
       {
         eState = EQUSIGN;
       }
-			else if( eState == EQUSIGN && wcThisChar == L'\"' )
+      else if( eState == EQUSIGN && wcThisChar == L'\"' )
       {
         spResult->m_Value.push_back( wcThisChar );
         eState = QSTRING;
       }
-			else if( eState == QSTRING && wcThisChar == L'\"' )
+      else if( eState == QSTRING && wcThisChar == L'\"' )
       {
         ReplaceSubstSeqs( pReadSeq );
-				spResult->m_Value.append( *pReadSeq );
+        spResult->m_Value.append( *pReadSeq );
         eState = BARESTR;
       }
       // Borland C++ 6.0 BUG: since std::isalnum template function is not correctly
@@ -775,19 +775,19 @@ CAttribute * CAttribute::TryMake( std::wstring * pSrc ) throw( std::bad_alloc )
         spResult->m_Value.append( *pReadSeq );
         eState = FINAL;
       }
-			else
-				fMatch = false;
+      else
+        fMatch = false;
 
-			if( fMatch )
-			{
-				spReadSeq->clear();
-			}
+      if( fMatch )
+      {
+        spReadSeq->clear();
+      }
 
-			// Optimization
-				if( n == N_SKIP_LIMIT && eState < ATTNAME )
-				{
-					n = pSrc->size();
-				}
+      // Optimization
+        if( n == N_SKIP_LIMIT && eState < ATTNAME )
+        {
+          n = pSrc->size();
+        }
 
       ++n;
     }// while
@@ -1009,7 +1009,7 @@ std::ostream & operator <<( std::ostream & rfDest, xml::CDocTree & rfSrc )
   // Node content output
   if( LevelList.First == LevelList.Last  )
   {
-		const xml::CTerminalNode * pThisNode = static_cast< const xml::CTerminalNode * >( pRootNode );
+    const xml::CTerminalNode * pThisNode = static_cast< const xml::CTerminalNode * >( pRootNode );
     const xml::CXmlContent * pNodeContent;
 
     *pThisNode >> pNodeContent;
@@ -1036,151 +1036,151 @@ std::ostream & operator <<( std::ostream & rfDest, xml::CDocTree & rfSrc )
 //---------------------------------------------------------------------------
 CServiceTag * CServiceTag::TryMake( std::wstring * pSrc )
 //---------------------------------------------------------------------------
-	throw( std::bad_alloc )
+  throw( std::bad_alloc )
 {
-	enum STATE {
-		INITIAL = 0,
-		LAB, // Left Angle Bracket
-		LQM, // Left Question Mark
-		RQM, // Right Question Mark
-		RAB, // Right Angle Bracket
-		FINAL
-	};
+  enum STATE {
+    INITIAL = 0,
+    LAB, // Left Angle Bracket
+    LQM, // Left Question Mark
+    RQM, // Right Question Mark
+    RAB, // Right Angle Bracket
+    FINAL
+  };
 
-	CServiceTag * pResult = NULL;
+  CServiceTag * pResult = NULL;
 
-	if( pSrc != NULL && pSrc->size() > 0 )
-	{
-		TAutoString spReadSeq( new std::wstring );
-		std::wstring * pReadSeq = spReadSeq.get();
-		size_t nPreParse = 0;
-		size_t n = 0;
-		STATE eState = INITIAL;
-		TAutoServiceTag spResult( new CServiceTag );
+  if( pSrc != NULL && pSrc->size() > 0 )
+  {
+    TAutoString spReadSeq( new std::wstring );
+    std::wstring * pReadSeq = spReadSeq.get();
+    size_t nPreParse = 0;
+    size_t n = 0;
+    STATE eState = INITIAL;
+    TAutoServiceTag spResult( new CServiceTag );
 
-		while( n < pSrc->size() && eState < FINAL )
-		{
-			wchar_t wcThisChar = pSrc->at( n );
-			spReadSeq->append( 1 /* count */, wcThisChar );
-			bool fMatch = true;
-			bool fSequental = spReadSeq->size() == 1;
+    while( n < pSrc->size() && eState < FINAL )
+    {
+      wchar_t wcThisChar = pSrc->at( n );
+      spReadSeq->append( 1 /* count */, wcThisChar );
+      bool fMatch = true;
+      bool fSequental = spReadSeq->size() == 1;
 
-			if( eState == INITIAL && wcThisChar == L'<' )
-			{
-				nPreParse = n;
-				spResult->m_SrcEntryItor = pSrc->begin() + n;
-				eState = LAB;
-			}
-			else if( eState == LAB && wcThisChar == L'?' && fSequental )
-			{
-				eState = LQM;
-			}
-			else if( eState == LQM && wcThisChar == L'?' )
-			{	
-				pReadSeq->pop_back();
-				spResult->m_ContentStr.append( *pReadSeq );
-				eState = RQM;
-			}
-			else if( eState == RQM && wcThisChar == L'>' )
-			{
-				if( fSequental )
-				{
-					eState = RAB;
-				}
-				else
-				{
-					spResult->m_ContentStr.push_back( L'?' );
-					spResult->m_ContentStr.append( *pReadSeq );
-					eState = LQM;
-				}
-			}
-			else
-				fMatch = false;
+      if( eState == INITIAL && wcThisChar == L'<' )
+      {
+        nPreParse = n;
+        spResult->m_SrcEntryItor = pSrc->begin() + n;
+        eState = LAB;
+      }
+      else if( eState == LAB && wcThisChar == L'?' && fSequental )
+      {
+        eState = LQM;
+      }
+      else if( eState == LQM && wcThisChar == L'?' )
+      {  
+        pReadSeq->pop_back();
+        spResult->m_ContentStr.append( *pReadSeq );
+        eState = RQM;
+      }
+      else if( eState == RQM && wcThisChar == L'>' )
+      {
+        if( fSequental )
+        {
+          eState = RAB;
+        }
+        else
+        {
+          spResult->m_ContentStr.push_back( L'?' );
+          spResult->m_ContentStr.append( *pReadSeq );
+          eState = LQM;
+        }
+      }
+      else
+        fMatch = false;
 
-			if( fMatch )
-			{
-				spReadSeq->clear();
-			}
-			
-			if( eState == RAB )
-			{
-				eState = FINAL;
-			}	
-			
-			++n;
-		}// while
+      if( fMatch )
+      {
+        spReadSeq->clear();
+      }
+      
+      if( eState == RAB )
+      {
+        eState = FINAL;
+      }  
+      
+      ++n;
+    }// while
 
-		spResult->m_nRead = n - nPreParse;
+    spResult->m_nRead = n - nPreParse;
 
-		if( eState == FINAL )
-		{
-			pResult = spResult.release();
-		}
-	}
+    if( eState == FINAL )
+    {
+      pResult = spResult.release();
+    }
+  }
 
-	return pResult;
+  return pResult;
 }
 
 //---------------------------------------------------------------------------
 const CSubstSequence & CSubstSequence::operator >>( const std::wstring * & rfpContent ) const
 //---------------------------------------------------------------------------
-	throw()
+  throw()
 {
-	rfpContent = & this->m_Content;
-	return *this;
+  rfpContent = & this->m_Content;
+  return *this;
 }
 
 //---------------------------------------------------------------------------
 CSubstSequence * CSubstSequence::TryMake( std::wstring * pSrc )
 //---------------------------------------------------------------------------
-	throw( std::bad_alloc )
+  throw( std::bad_alloc )
 {
-	static const wchar_t * awsSamples[] = { L"\&quot\;",	L"\&lt\;", L"\&gt\;" };
-	static const wchar_t awcResults[]		= { L'\"'			 ,	L'<'		 , L'>'			 };
-	static const size_t nSamples = sizeof( awsSamples )/sizeof( awsSamples[0] );
-	
-	CSubstSequence * pResult = NULL;
+  static const wchar_t * awsSamples[] = { L"\&quot\;",  L"\&lt\;", L"\&gt\;" };
+  static const wchar_t awcResults[]    = { L'\"'       ,  L'<'     , L'>'       };
+  static const size_t nSamples = sizeof( awsSamples )/sizeof( awsSamples[0] );
+  
+  CSubstSequence * pResult = NULL;
 
-	if( pSrc != NULL && pSrc->size() > 3 ) // &quot; &lt; &gt; => min 4 symbols.
-	{
-		TAutoSubstSeq spResult( new CSubstSequence );
+  if( pSrc != NULL && pSrc->size() > 3 ) // &quot; &lt; &gt; => min 4 symbols.
+  {
+    TAutoSubstSeq spResult( new CSubstSequence );
 
-		size_t n = 0;
-		size_t nPos = std::wstring::npos;
-		wchar_t wcResult;
-		while( n < nSamples && nPos == std::wstring::npos )
-		{
-			nPos = pSrc->find( awsSamples[ n ] );
-			spResult->m_nSrcChar = std::wcslen( awsSamples[ n ] );
-			wcResult = awcResults[ n ];						
-			++n;
-		}
+    size_t n = 0;
+    size_t nPos = std::wstring::npos;
+    wchar_t wcResult;
+    while( n < nSamples && nPos == std::wstring::npos )
+    {
+      nPos = pSrc->find( awsSamples[ n ] );
+      spResult->m_nSrcChar = std::wcslen( awsSamples[ n ] );
+      wcResult = awcResults[ n ];            
+      ++n;
+    }
 
-		if( nPos != std::wstring::npos )
-		{
-			spResult->m_Content.push_back( wcResult );
-			spResult->m_SrcEntryItor = pSrc->begin() + nPos;
-			pResult = spResult.release();	
-		}		
-	}// if
+    if( nPos != std::wstring::npos )
+    {
+      spResult->m_Content.push_back( wcResult );
+      spResult->m_SrcEntryItor = pSrc->begin() + nPos;
+      pResult = spResult.release();  
+    }    
+  }// if
 
-	return pResult;
+  return pResult;
 }
 
 //---------------------------------------------------------------------------
 const CSubstSequence & CSubstSequence::operator >>( size_t & rfnSrcChar ) const
 //---------------------------------------------------------------------------
-	throw()
+  throw()
 {
-	rfnSrcChar = this->m_nSrcChar;
-	return *this;
+  rfnSrcChar = this->m_nSrcChar;
+  return *this;
 }
 
 //---------------------------------------------------------------------------
 const CSubstSequence & CSubstSequence::operator >>( std::wstring::const_iterator & rfSrcEntry ) const
 //---------------------------------------------------------------------------
-	throw()
+  throw()
 {
-	rfSrcEntry = this->m_SrcEntryItor;
-	return *this;
+  rfSrcEntry = this->m_SrcEntryItor;
+  return *this;
 }
