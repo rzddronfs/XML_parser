@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
-// (c) Andrew Minenkov, 2013.
+// (c) Andrew Minenkov, 2018.
 //---------------------------------------------------------------------------
-// This code was written as close to ISO/IEC 14882-98 as possible.
+// This code was written as close to ISO/IEC 14882-14 as possible.
 // The file contains simple xml parser declarations.
 
 #ifndef XmlParserH
@@ -87,16 +87,16 @@ namespace xml {
   
   struct CSubstSequence {
     static CSubstSequence * TryMake( std::wstring * pSrc )
-      throw( std::bad_alloc );
+      noexcept( false );
 
     const CSubstSequence & operator >>( const std::wstring * & rfpContent ) const
-      throw();        
+      noexcept;        
 
     const CSubstSequence & operator >>( size_t & rfnSrcChar ) const
-      throw();
+      noexcept;
 
     const CSubstSequence & operator >>( std::wstring::const_iterator & rfSrcEntry ) const
-      throw();
+      noexcept;
 
   private:
     CSubstSequence() {}
@@ -110,16 +110,16 @@ namespace xml {
 
   struct CServiceTag {
     static CServiceTag * TryMake( std::wstring * pSrc )
-      throw( std::bad_alloc );
+      noexcept( false );
 
     const CServiceTag & operator >>( const std::wstring * & rfpContent ) const
-      throw();    
+      noexcept;    
 
     const CServiceTag & operator >>( size_t & rfnSrcChar ) const
-      throw();
+      noexcept;
 
     const CServiceTag & operator >>( std::wstring::const_iterator & rfSrcEntry ) const
-      throw();
+      noexcept;
       
     private:
       CServiceTag() {}
@@ -133,16 +133,16 @@ namespace xml {
 
   struct CXmlComment {
     static CXmlComment * TryMake( std::wstring * pSrc )
-      throw( std::bad_alloc );
+      noexcept( false );
 
     const CXmlComment & operator >>( const std::wstring * & rfpContent ) const
-      throw();    
+      noexcept;    
 
     const CXmlComment & operator >>( size_t & rfnCommentChar ) const
-      throw();
+      noexcept;
 
     const CXmlComment & operator >>( std::wstring::const_iterator & rfSrcEntry ) const
-      throw();
+      noexcept;
 
     private:
       CXmlComment() {}
@@ -155,7 +155,7 @@ namespace xml {
   ///////////////////////////////////////////////////////////////////////////
 
   struct CXmlName {
-    static CXmlName * TryMake( std::wstring * pSrc ) throw( std::bad_alloc );
+    static CXmlName * TryMake( std::wstring * pSrc ) noexcept( false );
     std::wstring String;
   };
 
@@ -165,14 +165,14 @@ namespace xml {
 
   class CAttribute {
   public:
-    static CAttribute * TryMake( std::wstring * pSrc ) throw( std::bad_alloc );
+    static CAttribute * TryMake( std::wstring * pSrc ) noexcept( false );
 
     const std::wstring * const cpName;
     const std::wstring * const cpValue;
 
   private:
     CAttribute()
-      throw();
+      noexcept;
 
     CXmlName m_Name;
     std::wstring m_Value;
@@ -199,32 +199,32 @@ namespace xml {
     };
 
     virtual ~CTrunkNode()
-      throw();
+      noexcept;
 
     // Special methods
     static CTrunkNode * TryMake( std::wstring * pSrc )
-      throw( std::bad_alloc );
+      noexcept( false );
 
     // Accessors.
     const CTrunkNode & operator >>( NODE_LIST & rfLevelList ) const
-      throw();
+      noexcept;
 
     const CTrunkNode & operator >>( ATTR_LIST & rfAttrList ) const
-      throw();
+      noexcept;
 
     const CTrunkNode & operator >>( const CXmlName * & rfpName ) const
-      throw();
+      noexcept;
 
     // Optimizations support
     const CTrunkNode & operator >>( size_t & rfnSrcChar ) const
-      throw();
+      noexcept;
 
     const CTrunkNode & operator >>( std::wstring::const_iterator & rfSrcEntry ) const
-      throw();
+      noexcept;
 
   protected:
     // Inconsistent init to consequent build up with TryMake (basement construction);
-    CTrunkNode() throw();
+    CTrunkNode() noexcept;
 
     CXmlName m_NodeName;
     TXmlAttrSet m_AttrList;
@@ -245,16 +245,16 @@ namespace xml {
   class CTerminalNode : public CTrunkNode {
   public:
     static CTerminalNode * TryMake( std::wstring * pSrc )
-      throw( std::bad_alloc );
+      noexcept( false );
 
     // Accessors
     const CTerminalNode & operator >>( const CXmlContent * & rfpContent ) const
-      throw();
+      noexcept;
 
   protected:
     // Inconsistent init to consequent build up with TryMake;
     CTerminalNode()
-      throw();
+      noexcept;
 
     CXmlContent m_Content;
 
@@ -268,16 +268,16 @@ namespace xml {
   class CDocTree {
   public:
     explicit CDocTree( std::wifstream * pXmlStream )
-      throw( std::logic_error, std::bad_alloc );
+      noexcept( false );
 
     CDocTree( const CTrunkNode & rfRootNode )
-      throw();
+      noexcept;
 
     ~CDocTree()
-      throw();
+      noexcept;
 
     const CDocTree & operator >>( const CTrunkNode * & rfpRootNode ) const
-      throw();
+      noexcept;
 
   private:
     CDocTree();

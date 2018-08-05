@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------
-// (c) Andrew Minenkov, 2013.
+// (c) Andrew Minenkov, 2018.
 //---------------------------------------------------------------------------
 #include "XmlParser.h"
 #include <memory>
@@ -31,7 +31,7 @@ const char * STR_INVALID_STREAM = "The given stream is not a valid XML document"
 //---------------------------------------------------------------------------
 std::wstring * ReplaceSubstSeqs( std::wstring * pReadSeq )
 //---------------------------------------------------------------------------
-  throw( std::bad_alloc )
+  noexcept( false )
 {
   std::wstring * pResult = NULL;        
   
@@ -61,7 +61,7 @@ std::wstring * ReplaceSubstSeqs( std::wstring * pReadSeq )
 }
 
 //---------------------------------------------------------------------------
-CTrunkNode::CTrunkNode() throw()
+CTrunkNode::CTrunkNode() noexcept
 //---------------------------------------------------------------------------
 {
 
@@ -70,7 +70,7 @@ CTrunkNode::CTrunkNode() throw()
 //---------------------------------------------------------------------------
 CDocTree::~CDocTree()
 //---------------------------------------------------------------------------
-  throw()
+  noexcept
 {
   if( m_fAllowDelete )
     delete m_pRootNode;
@@ -79,7 +79,7 @@ CDocTree::~CDocTree()
 //---------------------------------------------------------------------------
 const CDocTree & CDocTree::operator >>( const CTrunkNode * & rfpRootNode ) const
 //---------------------------------------------------------------------------
-  throw()
+  noexcept
 {
   rfpRootNode = m_pRootNode;
   return *this;
@@ -88,9 +88,9 @@ const CDocTree & CDocTree::operator >>( const CTrunkNode * & rfpRootNode ) const
 //---------------------------------------------------------------------------
 CDocTree::CDocTree( std::wifstream * pXmlStream )
 //---------------------------------------------------------------------------
-  throw( std::logic_error, std::bad_alloc ) :
+  noexcept( false ) 
 
-  m_fAllowDelete( true )
+  : m_fAllowDelete( true )
 {
   if( pXmlStream == NULL )
     throw std::logic_error( STR_UNINITILIZED_STREAM );
@@ -158,7 +158,7 @@ CDocTree::CDocTree( std::wifstream * pXmlStream )
 //---------------------------------------------------------------------------
 const CXmlComment & CXmlComment::operator >>( size_t & rfnCommentChar ) const
 //---------------------------------------------------------------------------
-  throw()
+  noexcept
 {
   rfnCommentChar = this->m_nRead;
   return *this;
@@ -167,7 +167,7 @@ const CXmlComment & CXmlComment::operator >>( size_t & rfnCommentChar ) const
 //---------------------------------------------------------------------------
 const CXmlComment & CXmlComment::operator >>( std::wstring::const_iterator & rfSrcEntry ) const
 //---------------------------------------------------------------------------
-  throw()
+  noexcept
 {
   rfSrcEntry = this->m_SrcEntryItor;
   return *this;  
@@ -176,7 +176,7 @@ const CXmlComment & CXmlComment::operator >>( std::wstring::const_iterator & rfS
 //---------------------------------------------------------------------------
 const CServiceTag & CServiceTag::operator >>( size_t & rfnSrcChar ) const
 //---------------------------------------------------------------------------
-  throw()
+  noexcept
 {
   rfnSrcChar = this->m_nRead;
   return *this;
@@ -185,7 +185,7 @@ const CServiceTag & CServiceTag::operator >>( size_t & rfnSrcChar ) const
 //---------------------------------------------------------------------------
 const CServiceTag & CServiceTag::operator >>( const std::wstring * & rfpContent ) const
 //---------------------------------------------------------------------------
-  throw()
+  noexcept
 {
   rfpContent = & this->m_ContentStr;
   return *this;
@@ -194,7 +194,7 @@ const CServiceTag & CServiceTag::operator >>( const std::wstring * & rfpContent 
 //---------------------------------------------------------------------------
 const CServiceTag & CServiceTag::operator >>( std::wstring::const_iterator & rfSrcEntry ) const
 //---------------------------------------------------------------------------
-  throw()
+  noexcept
 {
   rfSrcEntry = this->m_SrcEntryItor;
   return *this;  
@@ -203,7 +203,7 @@ const CServiceTag & CServiceTag::operator >>( std::wstring::const_iterator & rfS
 //---------------------------------------------------------------------------
 const CXmlComment & CXmlComment::operator >>( const std::wstring * & rfpContent ) const
 //---------------------------------------------------------------------------
-  throw()
+  noexcept
 {
   rfpContent = & this->m_ContentStr;
   return *this;
@@ -212,14 +212,14 @@ const CXmlComment & CXmlComment::operator >>( const std::wstring * & rfpContent 
 //---------------------------------------------------------------------------
 const CTrunkNode & CTrunkNode::operator >>( std::wstring::const_iterator & rfSrcEntry ) const
 //---------------------------------------------------------------------------
-  throw()
+  noexcept
 {
   rfSrcEntry = this->m_SrcEntryItor;
   return *this;  
 }
 
 //---------------------------------------------------------------------------
-CXmlComment * CXmlComment::TryMake( std::wstring * pSrc ) throw( std::bad_alloc )
+CXmlComment * CXmlComment::TryMake( std::wstring * pSrc ) noexcept( false )
 //---------------------------------------------------------------------------
 {
   enum STATE {
@@ -338,14 +338,14 @@ CXmlComment * CXmlComment::TryMake( std::wstring * pSrc ) throw( std::bad_alloc 
 //---------------------------------------------------------------------------
 const CTrunkNode & CTrunkNode::operator >>( size_t & rfnSrcChar ) const
 //---------------------------------------------------------------------------
-  throw()
+  noexcept
 {
   rfnSrcChar = this->m_nSrcChar;
   return *this;
 }
 
 //---------------------------------------------------------------------------
-CTrunkNode * CTrunkNode::TryMake( std::wstring * pSrc ) throw( std::bad_alloc )
+CTrunkNode * CTrunkNode::TryMake( std::wstring * pSrc ) noexcept( false )
 //---------------------------------------------------------------------------
 {
   enum STATE {
@@ -523,7 +523,7 @@ CTrunkNode * CTrunkNode::TryMake( std::wstring * pSrc ) throw( std::bad_alloc )
 }
 
 //---------------------------------------------------------------------------
-CTerminalNode * CTerminalNode::TryMake( std::wstring * pSrc ) throw( std::bad_alloc )
+CTerminalNode * CTerminalNode::TryMake( std::wstring * pSrc ) noexcept( false )
 //---------------------------------------------------------------------------
 {
   enum STATE {
@@ -699,7 +699,7 @@ CTerminalNode * CTerminalNode::TryMake( std::wstring * pSrc ) throw( std::bad_al
 }
 
 //---------------------------------------------------------------------------
-CAttribute * CAttribute::TryMake( std::wstring * pSrc ) throw( std::bad_alloc )
+CAttribute * CAttribute::TryMake( std::wstring * pSrc ) noexcept( false )
 //---------------------------------------------------------------------------
 {
   using namespace std;
@@ -802,7 +802,7 @@ CAttribute * CAttribute::TryMake( std::wstring * pSrc ) throw( std::bad_alloc )
 }
 
 //---------------------------------------------------------------------------
-CXmlName * CXmlName::TryMake( std::wstring * pSrc ) throw( std::bad_alloc )
+CXmlName * CXmlName::TryMake( std::wstring * pSrc ) noexcept( false )
 //---------------------------------------------------------------------------
 {
   using namespace std;
@@ -859,7 +859,7 @@ CXmlName * CXmlName::TryMake( std::wstring * pSrc ) throw( std::bad_alloc )
 }
 
 //---------------------------------------------------------------------------
-CTrunkNode::~CTrunkNode() throw()
+CTrunkNode::~CTrunkNode() noexcept
 //---------------------------------------------------------------------------
 {
   for( size_t n = 0; n < m_AttrList.size(); ++n )
@@ -874,7 +874,7 @@ CTrunkNode::~CTrunkNode() throw()
 }
 
 //---------------------------------------------------------------------------
-CAttribute::CAttribute() throw() :
+CAttribute::CAttribute() noexcept :
 //---------------------------------------------------------------------------
   cpName( & m_Name.String ), cpValue( & m_Value )
 {
@@ -882,7 +882,7 @@ CAttribute::CAttribute() throw() :
 }
 
 //---------------------------------------------------------------------------
-CTerminalNode::CTerminalNode() throw() :
+CTerminalNode::CTerminalNode() noexcept :
 //---------------------------------------------------------------------------
   CTrunkNode()
 {
@@ -892,7 +892,7 @@ CTerminalNode::CTerminalNode() throw() :
 //---------------------------------------------------------------------------
 const CTrunkNode & CTrunkNode::operator >>( NODE_LIST & rfLevelList ) const
 //---------------------------------------------------------------------------
-  throw()
+  noexcept
 {
   rfLevelList.First = m_NodeList.begin();
   rfLevelList.Last = m_NodeList.end();
@@ -902,7 +902,7 @@ const CTrunkNode & CTrunkNode::operator >>( NODE_LIST & rfLevelList ) const
 //---------------------------------------------------------------------------
 const CTerminalNode & CTerminalNode::operator >>( const CXmlContent * & rfpContent ) const
 //---------------------------------------------------------------------------
-  throw()
+  noexcept
 {
   rfpContent = & m_Content;
   return *this;
@@ -911,7 +911,7 @@ const CTerminalNode & CTerminalNode::operator >>( const CXmlContent * & rfpConte
 //---------------------------------------------------------------------------
 const CTrunkNode & CTrunkNode::operator >>( const CXmlName * & rfpName ) const
 //---------------------------------------------------------------------------
-  throw()
+  noexcept
 {
   rfpName = & m_NodeName;
   return *this;
@@ -920,7 +920,7 @@ const CTrunkNode & CTrunkNode::operator >>( const CXmlName * & rfpName ) const
 //---------------------------------------------------------------------------
 const CTrunkNode & CTrunkNode::operator >>( ATTR_LIST & rfAttrList ) const
 //---------------------------------------------------------------------------
-  throw()
+  noexcept
 {
   rfAttrList.First = m_AttrList.begin();
   rfAttrList.Last = m_AttrList.end();
@@ -947,9 +947,9 @@ public:
 //---------------------------------------------------------------------------
 CDocTree::CDocTree( const CTrunkNode & rfRootNode )
 //---------------------------------------------------------------------------
-  throw() :
-
-  m_fAllowDelete( false )
+  noexcept 
+  
+  : m_fAllowDelete( false )
 {
   m_pRootNode = const_cast< CTrunkNode * >( & rfRootNode );
 }
@@ -1024,7 +1024,7 @@ std::ostream & operator <<( std::ostream & rfDest, xml::CDocTree & rfSrc )
 //---------------------------------------------------------------------------
 CServiceTag * CServiceTag::TryMake( std::wstring * pSrc )
 //---------------------------------------------------------------------------
-  throw( std::bad_alloc )
+  noexcept( false )
 {
   enum STATE {
     INITIAL = 0,
@@ -1112,7 +1112,7 @@ CServiceTag * CServiceTag::TryMake( std::wstring * pSrc )
 //---------------------------------------------------------------------------
 const CSubstSequence & CSubstSequence::operator >>( const std::wstring * & rfpContent ) const
 //---------------------------------------------------------------------------
-  throw()
+  noexcept
 {
   rfpContent = & this->m_Content;
   return *this;
@@ -1121,10 +1121,10 @@ const CSubstSequence & CSubstSequence::operator >>( const std::wstring * & rfpCo
 //---------------------------------------------------------------------------
 CSubstSequence * CSubstSequence::TryMake( std::wstring * pSrc )
 //---------------------------------------------------------------------------
-  throw( std::bad_alloc )
+  noexcept( false )
 {
-  static const wchar_t * awsSamples[] = { L"\&quot\;",  L"\&lt\;", L"\&gt\;" };
-  static const wchar_t awcResults[]    = { L'\"'       ,  L'<'     , L'>'       };
+  static const wchar_t * awsSamples[] = { L"&quot;",  L"&lt;", L"&gt;" };
+  static const wchar_t awcResults[]   = { L'\"'    ,  L'<'   , L'>'    };
   static const size_t nSamples = sizeof( awsSamples )/sizeof( awsSamples[0] );
   
   CSubstSequence * pResult = NULL;
@@ -1158,7 +1158,7 @@ CSubstSequence * CSubstSequence::TryMake( std::wstring * pSrc )
 //---------------------------------------------------------------------------
 const CSubstSequence & CSubstSequence::operator >>( size_t & rfnSrcChar ) const
 //---------------------------------------------------------------------------
-  throw()
+  noexcept
 {
   rfnSrcChar = this->m_nSrcChar;
   return *this;
@@ -1167,7 +1167,7 @@ const CSubstSequence & CSubstSequence::operator >>( size_t & rfnSrcChar ) const
 //---------------------------------------------------------------------------
 const CSubstSequence & CSubstSequence::operator >>( std::wstring::const_iterator & rfSrcEntry ) const
 //---------------------------------------------------------------------------
-  throw()
+  noexcept
 {
   rfSrcEntry = this->m_SrcEntryItor;
   return *this;
