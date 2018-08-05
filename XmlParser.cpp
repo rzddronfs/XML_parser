@@ -10,14 +10,14 @@
 
 using namespace xml;
 
-typedef std::auto_ptr< std::wstring > TAutoString;
-typedef std::auto_ptr< xml::CTrunkNode > TAutoTrunkNode;
-typedef std::auto_ptr< xml::CTerminalNode > TAutoTermNode;
-typedef std::auto_ptr< xml::CXmlName > TAutoXmlName;
-typedef std::auto_ptr< xml::CAttribute > TAutoAttribute;
-typedef std::auto_ptr< xml::CXmlComment > TAutoXmlComment;
-typedef std::auto_ptr< xml::CServiceTag > TAutoServiceTag;
-typedef std::auto_ptr< xml::CSubstSequence > TAutoSubstSeq;
+typedef std::unique_ptr< std::wstring > TAutoString;
+typedef std::unique_ptr< xml::CTrunkNode > TAutoTrunkNode;
+typedef std::unique_ptr< xml::CTerminalNode > TAutoTermNode;
+typedef std::unique_ptr< xml::CXmlName > TAutoXmlName;
+typedef std::unique_ptr< xml::CAttribute > TAutoAttribute;
+typedef std::unique_ptr< xml::CXmlComment > TAutoXmlComment;
+typedef std::unique_ptr< xml::CServiceTag > TAutoServiceTag;
+typedef std::unique_ptr< xml::CSubstSequence > TAutoSubstSeq;
 
 typedef std::wstring::iterator TMutableEntryItor;
 

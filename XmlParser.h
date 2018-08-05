@@ -16,7 +16,7 @@
 //---------------------------------------------------------------------------
 namespace xml {
 //---------------------------------------------------------------------------
-// This parser limited only to unicode utf-8 files
+// This parser limited only to utf-8 without signature files
 // and implements the following grammar analysis:
 //
 //  XmlDocument:
